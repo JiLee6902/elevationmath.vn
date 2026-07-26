@@ -1,0 +1,29 @@
+{$DOMAIN} {
+	encode zstd gzip
+
+	# /storage/* → MinIO. Browser cần endpoint này để tải file qua presigned URL.
+	# Path-style URL: /storage/<bucket>/<key>
+	handle_path /storage/* {
+		reverse_proxy minio:9000 {
+			header_up Host {upstream_hostport}
+		}
+	}
+
+	# Mọi đường khác → Next.js. Tắt buffer cho streaming responses (Suspense).
+	reverse_proxy app:3000 {
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+		flush_interval -1
+	}
+
+	# Cache asset của Next dài hạn — file có hash trong tên, an toàn cache lâu
+	@nextStatic path /_next/static/*
+	header @nextStatic Cache-Control "public, max-age=31536000, immutable"
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}

@@ -1,0 +1,7 @@
+# Local-only override. Keep production Compose ports private while allowing
+# `npm run dev` on the host to reach Postgres. Port 5432 is already occupied
+# by OrbStack on this machine, so use 5433 locally.
+services:
+  postgres:
+    ports:
+      - '5433:5432'
