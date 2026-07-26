@@ -8,8 +8,16 @@ if (!connectionString) {
   throw new Error('DATABASE_URL is not set');
 }
 
+const databaseSsl =
+  process.env.DATABASE_SSL === 'disable'
+    ? false
+    : process.env.NODE_ENV === 'production'
+      ? 'require'
+      : false;
+
 const client = postgres(connectionString, {
   prepare: false,        // an toàn với pooler (transaction mode) không hỗ trợ prepared statements
+  ssl: databaseSsl,
   max: 10,
   idle_timeout: 20,
   connect_timeout: 10,   // fail fast nếu connection chậm thay vì retry mãi

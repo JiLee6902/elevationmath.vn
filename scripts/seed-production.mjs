@@ -41,7 +41,11 @@ function slugify(value) {
     .replace(/^-+|-+$/g, '');
 }
 
-const sql = postgres(DATABASE_URL, { max: 1, prepare: false });
+const sql = postgres(DATABASE_URL, {
+  max: 1,
+  prepare: false,
+  ssl: process.env.DATABASE_SSL === 'disable' ? false : 'require',
+});
 
 try {
   console.log('Seeding production defaults...');
