@@ -7,7 +7,6 @@ services:
     branch: main
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    initialDeployHook: node scripts/seed-production.mjs
     healthCheckPath: /
     autoDeploy: true
     envVars:
