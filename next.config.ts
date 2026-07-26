@@ -23,6 +23,21 @@ const nextConfig: NextConfig = {
   },
   // Tắt typed routes để tránh lỗi với prefix dynamic segment
   typedRoutes: false,
+  async rewrites() {
+    const apiOrigin = process.env.API_ORIGIN?.replace(/\/$/, '');
+    if (!apiOrigin) return [];
+
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${apiOrigin}/api/:path*`,
+      },
+      {
+        source: '/storage/:path*',
+        destination: `${apiOrigin}/storage/:path*`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

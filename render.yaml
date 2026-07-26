@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: elevation-math-api
+    runtime: docker
+    plan: free
+    region: singapore
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    dockerCommand: /bin/sh -c "node node_modules/drizzle-kit/bin.cjs migrate && node server.js"
+    initialDeployHook: node scripts/seed-production.mjs
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: elevation-math-db
+          property: connectionString
+      - key: NEXT_PUBLIC_APP_URL
+        sync: false
+      - key: ADMIN_EMAIL
+        value: admin@elevationmath.vn
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: S3_ENDPOINT
+        sync: false
+      - key: S3_PUBLIC_ENDPOINT
+        sync: false
+      - key: S3_REGION
+        sync: false
+      - key: S3_ACCESS_KEY
+        sync: false
+      - key: S3_SECRET_KEY
+        sync: false
+
+databases:
+  - name: elevation-math-db
+    plan: free
+    region: singapore
+    databaseName: elevation_math
+    user: elevation_math
