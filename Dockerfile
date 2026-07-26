@@ -16,6 +16,10 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
+# Render Docker builds do not expose runtime env vars during image build.
+# Next only needs DATABASE_URL to exist while collecting route modules here;
+# the real database URL is injected at runtime by Render/Vercel.
+ENV DATABASE_URL=postgresql://postgres:postgres@localhost:5432/elevation_math_build
 RUN npm run build
 
 # ---- runner: image cuối, chỉ chứa standalone output + static + public ----
