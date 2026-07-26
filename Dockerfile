@@ -52,4 +52,4 @@ COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
 USER nextjs
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["sh", "-c", "node node_modules/drizzle-kit/bin.cjs migrate && node server.js"]

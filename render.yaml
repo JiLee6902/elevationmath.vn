@@ -7,7 +7,6 @@ services:
     branch: main
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    dockerCommand: /bin/sh -c "node node_modules/drizzle-kit/bin.cjs migrate && node server.js"
     initialDeployHook: node scripts/seed-production.mjs
     healthCheckPath: /
     autoDeploy: true
