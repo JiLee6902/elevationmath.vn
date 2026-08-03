@@ -16,8 +16,8 @@ export default async function Page() {
       <div>
         <h1 className="text-2xl font-semibold">Loại tài liệu</h1>
         <p className="text-sm text-muted-foreground">
-          Tạo loại tài liệu theo từng lớp. Khi tạo tài liệu, admin chỉ thấy các
-          loại đã gắn cho cấp/lớp đang chọn.
+          Quản lý loại tài liệu và gắn cho nhiều lớp. Khi tạo tài liệu, admin
+          chỉ thấy các loại đã gắn cho cấp/lớp đang chọn.
         </p>
       </div>
       <DocumentTypesClient documentTypes={list} />

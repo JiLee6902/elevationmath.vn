@@ -47,6 +47,8 @@ const TYPE_NAMES = [
   'Đề thi & kiểm tra',
 ] as const;
 
+const DISTRIBUTION_TYPE_NAME = 'Phân phối CT Toán (Mới)';
+
 const GROUPS = DEFAULT_PROGRAM_GROUPS.map((group) => group.slug);
 
 const SAMPLE_DOCS: SampleDoc[] = [1, 2].flatMap((grade) =>
@@ -110,6 +112,12 @@ async function main() {
   const groupIds = new Map(groupRows.map((group) => [group.slug, group.id]));
   console.log(`  → Insert ${DEFAULT_PROGRAM_GROUPS.length} nhóm chương trình`);
 
+  function levelForGrade(grade: number): Level {
+    if (grade <= 5) return 'tieu_hoc';
+    if (grade <= 9) return 'thcs';
+    return 'thpt';
+  }
+
   for (const grade of [1, 2]) {
     for (const [index, name] of TYPE_NAMES.entries()) {
       await db.insert(documentTypes).values({
@@ -122,11 +130,22 @@ async function main() {
       });
     }
   }
+  for (const grade of [3, 4, 5, 6, 7, 8, 9]) {
+    const level = levelForGrade(grade);
+    await db.insert(documentTypes).values({
+      name: DISTRIBUTION_TYPE_NAME,
+      slug: slugify(`${level}-lop-${grade}-${DISTRIBUTION_TYPE_NAME}`),
+      level,
+      grade,
+      order: 1,
+      isActive: true,
+    });
+  }
   const typeRows = await db.select().from(documentTypes);
   const typeIds = new Map(
     typeRows.map((type) => [`${type.level}-${type.grade}-${type.name}`, type.id]),
   );
-  console.log(`  → Insert ${TYPE_NAMES.length} loại tài liệu cho lớp 1–2`);
+  console.log(`  → Insert ${TYPE_NAMES.length} loại tài liệu cho lớp 1–2, riêng ${DISTRIBUTION_TYPE_NAME} cho lớp 1–9`);
 
   const chapterRows = await db.select().from(chapters);
   for (const [index, doc] of SAMPLE_DOCS.entries()) {

@@ -28,6 +28,7 @@ const documentTypes = [
   'Đề thi & kiểm tra',
 ];
 
+const distributionTypeName = 'Phân phối CT Toán (Mới)';
 const chapterNames = ['Số và phép tính', 'Hình học và đo lường', 'Thống kê và xác suất'];
 
 function slugify(value) {
@@ -39,6 +40,12 @@ function slugify(value) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
+}
+
+function levelForGrade(grade) {
+  if (grade <= 5) return 'tieu_hoc';
+  if (grade <= 9) return 'thcs';
+  return 'thpt';
 }
 
 const sql = postgres(DATABASE_URL, {
@@ -96,6 +103,21 @@ try {
               updated_at = now()
       `;
     }
+  }
+
+  for (const grade of [3, 4, 5, 6, 7, 8, 9]) {
+    const level = levelForGrade(grade);
+    await sql`
+      insert into document_types (name, slug, level, grade, "order", is_active)
+      values (${distributionTypeName}, ${slugify(`${level}-lop-${grade}-${distributionTypeName}`)}, ${level}, ${grade}, 1, true)
+      on conflict (slug) do update
+        set name = excluded.name,
+            level = excluded.level,
+            grade = excluded.grade,
+            "order" = excluded."order",
+            is_active = true,
+            updated_at = now()
+    `;
   }
 
   const [{ count }] = await sql`select count(*)::int as count from documents`;
