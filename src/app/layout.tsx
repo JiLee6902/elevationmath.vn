@@ -27,7 +27,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Elevation Math — Học toán cùng nhau',
+  title: 'Elevation Math — Phát triển năng lực Toán',
   description:
     'Nền tảng tài liệu toán học cho học sinh Việt Nam từ lớp 1 đến lớp 12.',
 };
