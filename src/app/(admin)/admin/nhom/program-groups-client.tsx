@@ -2,8 +2,17 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Trash2, Pencil, Loader2, GripVertical } from 'lucide-react';
+import {
+  Eye,
+  EyeOff,
+  GripVertical,
+  Loader2,
+  Pencil,
+  Plus,
+  Trash2,
+} from 'lucide-react';
 import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -133,53 +142,106 @@ export function ProgramGroupsClient({ groups }: { groups: ProgramGroup[] }) {
         </Button>
       </div>
 
-      <div className="mt-4 space-y-2">
+      <div className="mt-4 overflow-hidden rounded-xl border bg-card">
         {groups.length === 0 && (
           <Card className="p-10 text-center text-muted-foreground">
             Chưa có nhóm nào. Bấm “Thêm nhóm” để tạo.
           </Card>
         )}
-        {groups.map((g) => (
-          <Card key={g.id} className="flex items-center gap-4 p-4">
-            <GripVertical className="size-4 shrink-0 text-muted-foreground/40" />
-            <div
-              className="size-10 shrink-0 rounded-xl"
-              style={{ background: groupGradient(g.color) }}
-              aria-hidden
-            />
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
-                <p className="truncate font-medium">{g.name}</p>
-                {!g.isActive && (
-                  <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                    Đang ẩn
-                  </span>
-                )}
+        {groups.length > 0 && (
+          <div className="overflow-x-auto">
+            <div className="min-w-[860px]">
+              <div className="grid grid-cols-[40px_minmax(260px,1fr)_minmax(320px,1.4fr)_90px_110px_132px] gap-4 border-b bg-muted/40 px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <span />
+                <span>Nhóm</span>
+                <span>Mô tả / đường dẫn</span>
+                <span>Thứ tự</span>
+                <span>Trạng thái</span>
+                <span className="text-right">Thao tác</span>
               </div>
-              <p className="truncate text-xs text-muted-foreground">
-                /nhom/{g.slug}
-                {g.description ? ` · ${g.description}` : ''}
-              </p>
+
+              <div className="divide-y">
+                {groups.map((g) => (
+                  <div
+                    key={g.id}
+                    className="grid grid-cols-[40px_minmax(260px,1fr)_minmax(320px,1.4fr)_90px_110px_132px] items-center gap-4 px-4 py-3"
+                  >
+                    <div className="flex items-center gap-2">
+                      <GripVertical className="size-4 shrink-0 text-muted-foreground/40" />
+                      <div
+                        className="size-5 shrink-0 rounded-full ring-4 ring-background"
+                        style={{ background: groupGradient(g.color) }}
+                        aria-hidden
+                      />
+                    </div>
+
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">{g.name}</p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        {g.color}
+                      </p>
+                    </div>
+
+                    <div className="min-w-0">
+                      <p className="truncate text-sm text-muted-foreground">
+                        {g.description || 'Chưa có mô tả'}
+                      </p>
+                      <p className="truncate text-xs text-primary">
+                        /nhom/{g.slug}
+                      </p>
+                    </div>
+
+                    <span className="text-sm text-muted-foreground">
+                      {g.order}
+                    </span>
+
+                    <Badge
+                      variant={g.isActive ? 'secondary' : 'outline'}
+                      className={cn(
+                        'rounded-full',
+                        g.isActive &&
+                          'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
+                      )}
+                    >
+                      {g.isActive ? 'Hiện' : 'Ẩn'}
+                    </Badge>
+
+                    <div className="flex justify-end gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => toggleActive(g)}
+                        title={g.isActive ? 'Ẩn' : 'Hiện'}
+                      >
+                        {g.isActive ? (
+                          <Eye className="size-4" />
+                        ) : (
+                          <EyeOff className="size-4" />
+                        )}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => openEdit(g)}
+                        title="Sửa"
+                      >
+                        <Pencil className="size-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => remove(g)}
+                        title="Xóa"
+                      >
+                        <Trash2 className="size-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <button
-              onClick={() => toggleActive(g)}
-              className={cn(
-                'rounded-full px-2.5 py-1 text-xs font-medium transition-colors',
-                g.isActive
-                  ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
-                  : 'bg-muted text-muted-foreground',
-              )}
-            >
-              {g.isActive ? 'Hiện' : 'Ẩn'}
-            </button>
-            <Button variant="ghost" size="icon" onClick={() => openEdit(g)}>
-              <Pencil className="size-4" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={() => remove(g)}>
-              <Trash2 className="size-4 text-destructive" />
-            </Button>
-          </Card>
-        ))}
+          </div>
+        )}
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
