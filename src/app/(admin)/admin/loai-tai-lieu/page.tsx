@@ -12,7 +12,7 @@ export default async function Page() {
     .orderBy(asc(documentTypes.level), asc(documentTypes.grade), asc(documentTypes.order))
     .catch(() => []);
   return (
-    <div className="max-w-4xl space-y-6">
+    <div className="w-full space-y-6">
       <div>
         <h1 className="text-2xl font-semibold">Loại tài liệu</h1>
         <p className="text-sm text-muted-foreground">

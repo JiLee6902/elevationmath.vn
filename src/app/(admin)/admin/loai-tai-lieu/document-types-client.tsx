@@ -112,19 +112,36 @@ export function DocumentTypesClient({
       <div className="flex justify-end">
         <Button onClick={openCreate}><Plus className="size-4" /> Thêm loại</Button>
       </div>
-      <div className="space-y-2">
+      <div className="grid gap-2">
         {documentTypes.map((type) => (
-          <Card key={type.id} className="flex items-center gap-4 p-4">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-sm font-bold text-primary">L{type.grade}</div>
-            <div className="min-w-0 flex-1">
-              <p className="font-medium">{type.name}</p>
-              <p className="text-xs text-muted-foreground">{LEVELS[type.level as LevelKey].name} · Lớp {type.grade} · Thứ tự {type.order}</p>
+          <Card
+            key={type.id}
+            className="flex-row items-center gap-4 px-4 py-3"
+          >
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-sm font-bold text-primary">
+              L{type.grade}
             </div>
-            <button onClick={() => void fetch(`/api/admin/document-types/${type.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ isActive: !type.isActive }) }).then(() => router.refresh())} className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
-              {type.isActive ? 'Hiện' : 'Đang ẩn'}
-            </button>
-            <Button variant="ghost" size="icon" onClick={() => openEdit(type)}><Pencil className="size-4" /></Button>
-            <Button variant="ghost" size="icon" onClick={() => remove(type)}><Trash2 className="size-4 text-destructive" /></Button>
+            <div className="grid min-w-0 flex-1 gap-0.5 md:grid-cols-[minmax(220px,1fr)_160px_100px] md:items-center">
+              <div className="min-w-0">
+                <p className="truncate font-medium">{type.name}</p>
+                <p className="text-xs text-muted-foreground md:hidden">
+                  {LEVELS[type.level as LevelKey].name} · Lớp {type.grade} · Thứ tự {type.order}
+                </p>
+              </div>
+              <p className="hidden text-sm text-muted-foreground md:block">
+                {LEVELS[type.level as LevelKey].name} · Lớp {type.grade}
+              </p>
+              <p className="hidden text-sm text-muted-foreground md:block">
+                Thứ tự {type.order}
+              </p>
+            </div>
+            <div className="ml-auto flex shrink-0 items-center gap-1">
+              <button onClick={() => void fetch(`/api/admin/document-types/${type.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ isActive: !type.isActive }) }).then(() => router.refresh())} className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                {type.isActive ? 'Hiện' : 'Đang ẩn'}
+              </button>
+              <Button variant="ghost" size="icon" onClick={() => openEdit(type)}><Pencil className="size-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => remove(type)}><Trash2 className="size-4 text-destructive" /></Button>
+            </div>
           </Card>
         ))}
       </div>
