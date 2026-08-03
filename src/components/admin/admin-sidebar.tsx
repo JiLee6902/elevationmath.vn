@@ -14,7 +14,7 @@ import {
   Settings,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { LogoWordmark } from '@/components/user/logo-mark';
+import { LogoMark } from '@/components/user/logo-mark';
 
 const ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
@@ -34,10 +34,15 @@ export function AdminSidebar() {
     <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r bg-sidebar text-sidebar-foreground lg:flex">
       <Link
         href="/admin"
-        className="flex h-16 items-center gap-2 border-b px-4 transition-colors hover:bg-sidebar-accent"
+        className="flex h-16 min-w-0 items-center gap-2 border-b px-3 transition-colors hover:bg-sidebar-accent"
       >
-        <LogoWordmark size="sm" className="px-1.5 py-0.5" />
-        <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+        <span className="flex min-w-0 flex-1 items-center gap-2 rounded-xl bg-white px-2 py-1 shadow-[0_7px_18px_rgba(45,43,127,0.12),0_1px_5px_rgba(249,173,34,0.10)] ring-1 ring-[#2d2b7f]/10">
+          <LogoMark size="sm" />
+          <span className="min-w-0 truncate text-sm font-semibold text-[#2d2b7f]">
+            Elevation Math
+          </span>
+        </span>
+        <span className="shrink-0 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
           admin
         </span>
       </Link>
