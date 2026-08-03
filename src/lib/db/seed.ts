@@ -2,7 +2,14 @@ import 'dotenv/config';
 import { config as dotenvConfig } from 'dotenv';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { chapters, documents, documentTypes, programGroups, users } from './schema';
+import {
+  chapters,
+  difficultyLevels,
+  documents,
+  documentTypes,
+  programGroups,
+  users,
+} from './schema';
 import * as schema from './schema';
 import { DEFAULT_PROGRAM_GROUPS } from '../constants';
 import { hashPassword } from '../password';
@@ -45,6 +52,11 @@ const TYPE_NAMES = [
   'Tài liệu',
   'Đề cương ôn tập',
   'Đề thi & kiểm tra',
+] as const;
+
+const DIFFICULTY_LEVELS = [
+  { key: 'co_ban', name: 'Cơ bản', color: '#2563eb', order: 1 },
+  { key: 'nang_cao', name: 'Nâng cao', color: '#f59e0b', order: 2 },
 ] as const;
 
 const DISTRIBUTION_TYPE_NAME = 'Phân phối CT Toán (Mới)';
@@ -107,6 +119,21 @@ async function main() {
 
   for (const group of DEFAULT_PROGRAM_GROUPS) {
     await db.insert(programGroups).values(group).onConflictDoNothing({ target: programGroups.slug });
+  }
+  for (const difficulty of DIFFICULTY_LEVELS) {
+    await db.insert(difficultyLevels).values({
+      ...difficulty,
+      isActive: true,
+    }).onConflictDoUpdate({
+      target: difficultyLevels.key,
+      set: {
+        name: difficulty.name,
+        color: difficulty.color,
+        order: difficulty.order,
+        isActive: true,
+        updatedAt: new Date(),
+      },
+    });
   }
   const groupRows = await db.select().from(programGroups);
   const groupIds = new Map(groupRows.map((group) => [group.slug, group.id]));

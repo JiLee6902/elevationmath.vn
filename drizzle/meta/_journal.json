@@ -15,6 +15,13 @@
       "when": 1784282661055,
       "tag": "0001_romantic_quicksilver",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785778200000,
+      "tag": "0002_breezy_difficulty_levels",
+      "breakpoints": true
     }
   ]
 }

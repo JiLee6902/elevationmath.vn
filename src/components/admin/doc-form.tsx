@@ -48,7 +48,6 @@ import {
   type UploadedFile,
 } from '@/components/user/upload-zone';
 import {
-  DIFFICULTIES,
   DOC_STATUS,
   LEVELS,
   type LevelKey,
@@ -61,6 +60,7 @@ import type {
   Chapter,
   Document,
   DocumentType,
+  DifficultyLevel,
   ProgramGroup,
 } from '@/lib/db/schema';
 import { slugify } from '@/lib/utils';
@@ -70,9 +70,16 @@ type Props = {
   chapters: Chapter[];
   programGroups: ProgramGroup[];
   documentTypes: DocumentType[];
+  difficultyLevels: DifficultyLevel[];
 };
 
-export function DocForm({ doc, chapters, programGroups, documentTypes }: Props) {
+export function DocForm({
+  doc,
+  chapters,
+  programGroups,
+  documentTypes,
+  difficultyLevels,
+}: Props) {
   const router = useRouter();
   const editing = !!doc;
   const [files, setFiles] = React.useState<UploadedFile[]>([]);
@@ -105,11 +112,15 @@ export function DocForm({ doc, chapters, programGroups, documentTypes }: Props) 
 
   const level = form.watch('level');
   const grade = form.watch('grade');
+  const currentDifficulty = form.watch('difficulty');
   const filteredChapters = chapters.filter(
     (c) => c.level === level && c.grade === grade,
   );
   const filteredDocumentTypes = documentTypes.filter(
     (type) => type.level === level && type.grade === grade && type.isActive,
+  );
+  const availableDifficultyLevels = difficultyLevels.filter(
+    (item) => item.isActive || item.key === currentDifficulty,
   );
 
   async function onSubmit(values: DocumentCreateInput) {
@@ -405,9 +416,9 @@ export function DocForm({ doc, chapters, programGroups, documentTypes }: Props) 
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {Object.entries(DIFFICULTIES).map(([k, d]) => (
-                              <SelectItem key={k} value={k}>
-                                {d.name}
+                            {availableDifficultyLevels.map((difficulty) => (
+                              <SelectItem key={difficulty.key} value={difficulty.key}>
+                                {difficulty.name}
                               </SelectItem>
                             ))}
                           </SelectContent>

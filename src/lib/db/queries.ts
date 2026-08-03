@@ -5,6 +5,7 @@ import {
   documents,
   chapters,
   documentTypes,
+  difficultyLevels,
   programGroups,
   users,
   downloads,
@@ -73,6 +74,14 @@ export async function getDocumentTypes(
     .from(documentTypes)
     .where(conditions.length ? and(...conditions) : undefined)
     .orderBy(asc(documentTypes.order), asc(documentTypes.name));
+}
+
+export async function getDifficultyLevels(includeHidden = false) {
+  return db
+    .select()
+    .from(difficultyLevels)
+    .where(includeHidden ? undefined : eq(difficultyLevels.isActive, true))
+    .orderBy(asc(difficultyLevels.order), asc(difficultyLevels.name));
 }
 
 export async function getDocuments(

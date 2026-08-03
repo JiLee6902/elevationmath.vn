@@ -28,6 +28,11 @@ const documentTypes = [
   'Đề thi & kiểm tra',
 ];
 
+const difficultyLevels = [
+  ['co_ban', 'Cơ bản', '#2563eb', 1],
+  ['nang_cao', 'Nâng cao', '#f59e0b', 2],
+];
+
 const distributionTypeName = 'Phân phối CT Toán (Mới)';
 const chapterNames = ['Số và phép tính', 'Hình học và đo lường', 'Thống kê và xác suất'];
 
@@ -73,6 +78,19 @@ try {
       on conflict (slug) do update
         set name = excluded.name,
             description = excluded.description,
+            color = excluded.color,
+            "order" = excluded."order",
+            is_active = true,
+            updated_at = now()
+    `;
+  }
+
+  for (const difficulty of difficultyLevels) {
+    await sql`
+      insert into difficulty_levels ("key", name, color, "order", is_active)
+      values (${difficulty[0]}, ${difficulty[1]}, ${difficulty[2]}, ${difficulty[3]}, true)
+      on conflict ("key") do update
+        set name = excluded.name,
             color = excluded.color,
             "order" = excluded."order",
             is_active = true,

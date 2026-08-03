@@ -116,6 +116,22 @@ export const documentTypes = pgTable(
   (t) => [index('document_type_grade_idx').on(t.level, t.grade, t.order)],
 );
 
+// Mức độ tài liệu. Key vẫn bám enum `difficulty` để không phá dữ liệu cũ,
+// nhưng tên/màu/thứ tự/ẩn hiện được admin quản lý động.
+export const difficultyLevels = pgTable(
+  'difficulty_levels',
+  {
+    key: difficultyEnum('key').primaryKey(),
+    name: text('name').notNull(),
+    color: text('color').default('#0ea5e9').notNull(),
+    order: integer('order').default(0).notNull(),
+    isActive: boolean('is_active').default(true).notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (t) => [index('difficulty_level_order_idx').on(t.order)],
+);
+
 export const documents = pgTable(
   'documents',
   {
@@ -261,6 +277,8 @@ export type ProgramGroup = typeof programGroups.$inferSelect;
 export type NewProgramGroup = typeof programGroups.$inferInsert;
 export type DocumentType = typeof documentTypes.$inferSelect;
 export type NewDocumentType = typeof documentTypes.$inferInsert;
+export type DifficultyLevel = typeof difficultyLevels.$inferSelect;
+export type NewDifficultyLevel = typeof difficultyLevels.$inferInsert;
 export type Document = typeof documents.$inferSelect;
 export type NewDocument = typeof documents.$inferInsert;
 export type Download = typeof downloads.$inferSelect;

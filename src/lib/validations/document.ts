@@ -57,6 +57,16 @@ export const documentTypeCreateSchema = z.object({
 
 export const documentTypeUpdateSchema = documentTypeCreateSchema.partial();
 
+export const difficultyLevelUpdateSchema = z.object({
+  name: z.string().min(2, 'Tên tối thiểu 2 ký tự').max(80).optional(),
+  color: z
+    .string()
+    .regex(/^#[0-9a-fA-F]{6}$/, 'Màu phải dạng hex #RRGGBB')
+    .optional(),
+  order: z.number().int().min(0).max(999).optional(),
+  isActive: z.boolean().optional(),
+});
+
 export const ratingSchema = z.object({
   score: z.number().int().min(1).max(5),
   comment: z.string().max(500).optional(),

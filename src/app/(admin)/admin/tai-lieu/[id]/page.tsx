@@ -3,6 +3,7 @@ import { DocForm } from '@/components/admin/doc-form';
 import { AdminPageHeader } from '@/components/admin/admin-page-header';
 import {
   getChapters,
+  getDifficultyLevels,
   getDocumentById,
   getDocumentTypes,
   getProgramGroups,
@@ -16,11 +17,12 @@ export default async function Page({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [doc, chapters, groups, documentTypes] = await Promise.all([
+  const [doc, chapters, groups, documentTypes, difficultyLevels] = await Promise.all([
     getDocumentById(id).catch(() => null),
     getChapters({}).catch(() => []),
     getProgramGroups(true).catch(() => []),
     getDocumentTypes({ includeHidden: true }).catch(() => []),
+    getDifficultyLevels(true).catch(() => []),
   ]);
   if (!doc) notFound();
   return (
@@ -35,6 +37,7 @@ export default async function Page({
         chapters={chapters}
         programGroups={groups}
         documentTypes={documentTypes}
+        difficultyLevels={difficultyLevels}
       />
     </div>
   );

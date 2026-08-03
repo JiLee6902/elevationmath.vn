@@ -1,14 +1,20 @@
 import { DocForm } from '@/components/admin/doc-form';
 import { AdminPageHeader } from '@/components/admin/admin-page-header';
-import { getChapters, getDocumentTypes, getProgramGroups } from '@/lib/db/queries';
+import {
+  getChapters,
+  getDifficultyLevels,
+  getDocumentTypes,
+  getProgramGroups,
+} from '@/lib/db/queries';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Page() {
-  const [chapters, groups, documentTypes] = await Promise.all([
+  const [chapters, groups, documentTypes, difficultyLevels] = await Promise.all([
     getChapters({}).catch(() => []),
     getProgramGroups(true).catch(() => []),
     getDocumentTypes({ includeHidden: true }).catch(() => []),
+    getDifficultyLevels(true).catch(() => []),
   ]);
   return (
     <div className="space-y-6">
@@ -21,6 +27,7 @@ export default async function Page() {
         chapters={chapters}
         programGroups={groups}
         documentTypes={documentTypes}
+        difficultyLevels={difficultyLevels}
       />
     </div>
   );
