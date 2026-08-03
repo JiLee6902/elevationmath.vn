@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { StatCard } from '@/components/admin/stat-card';
 import { OverviewChart } from '@/components/admin/overview-chart';
+import { AdminPageHeader } from '@/components/admin/admin-page-header';
 import {
   getStats,
   getRecentDocuments,
@@ -26,15 +27,12 @@ export const dynamic = 'force-dynamic';
 
 export default function AdminDashboard() {
   return (
-    <div className="max-w-7xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-          Dashboard
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Tổng quan hoạt động hôm nay
-        </p>
-      </div>
+    <div className="space-y-6">
+      <AdminPageHeader
+        eyebrow="Tổng quan"
+        title="Dashboard"
+        description="Theo dõi tài liệu, người dùng, lượt tải và các nội dung cần duyệt trong hệ thống."
+      />
 
       <Suspense fallback={<StatsCardsSkeleton />}>
         <StatsCards />

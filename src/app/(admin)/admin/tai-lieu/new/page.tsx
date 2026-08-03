@@ -1,4 +1,5 @@
 import { DocForm } from '@/components/admin/doc-form';
+import { AdminPageHeader } from '@/components/admin/admin-page-header';
 import { getChapters, getDocumentTypes, getProgramGroups } from '@/lib/db/queries';
 
 export const dynamic = 'force-dynamic';
@@ -11,12 +12,11 @@ export default async function Page() {
   ]);
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Tạo tài liệu</h1>
-        <p className="text-sm text-muted-foreground">
-          Upload file và nhập thông tin chi tiết
-        </p>
-      </div>
+      <AdminPageHeader
+        eyebrow="Tài liệu"
+        title="Tạo tài liệu"
+        description="Upload file, nhập metadata và phân loại tài liệu trước khi hiển thị ngoài website."
+      />
       <DocForm
         chapters={chapters}
         programGroups={groups}

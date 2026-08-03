@@ -222,8 +222,16 @@ export function DocumentTypesClient({
 
   return (
     <>
-      <div className="flex justify-end">
-        <Button onClick={openCreate}><Plus className="size-4" /> Thêm loại</Button>
+      <div className="flex flex-col gap-3 rounded-2xl border bg-card/80 p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-sm font-medium">{groups.length} loại tài liệu</p>
+          <p className="text-xs text-muted-foreground">
+            Mỗi loại có thể gắn nhiều lớp, hệ thống tự lưu theo từng lớp.
+          </p>
+        </div>
+        <Button onClick={openCreate}>
+          <Plus className="size-4" /> Thêm loại
+        </Button>
       </div>
       <div className="overflow-hidden rounded-xl border bg-card">
         <div className="overflow-x-auto">

@@ -135,14 +135,20 @@ export function ProgramGroupsClient({ groups }: { groups: ProgramGroup[] }) {
 
   return (
     <>
-      <div className="flex justify-end">
+      <div className="flex flex-col gap-3 rounded-2xl border bg-card/80 p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-sm font-medium">{groups.length} nhóm chương trình</p>
+          <p className="text-xs text-muted-foreground">
+            Điều chỉnh nhóm hiển thị trên menu và trang danh mục.
+          </p>
+        </div>
         <Button onClick={openCreate}>
           <Plus className="size-4" />
           Thêm nhóm
         </Button>
       </div>
 
-      <div className="mt-4 overflow-hidden rounded-xl border bg-card">
+      <div className="overflow-hidden rounded-xl border bg-card">
         {groups.length === 0 && (
           <Card className="p-10 text-center text-muted-foreground">
             Chưa có nhóm nào. Bấm “Thêm nhóm” để tạo.

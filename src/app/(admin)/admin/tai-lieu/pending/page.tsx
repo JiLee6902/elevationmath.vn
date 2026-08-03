@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AdminPageHeader } from '@/components/admin/admin-page-header';
 import { getDocuments } from '@/lib/db/queries';
 import { PendingTable } from './pending-table';
 
@@ -7,13 +8,16 @@ export const dynamic = 'force-dynamic';
 
 export default function Page() {
   return (
-    <div className="space-y-6 max-w-7xl">
-      <div>
-        <h1 className="text-2xl font-semibold">Duyệt bài</h1>
-        <Suspense fallback={<Skeleton className="h-4 w-48 mt-1" />}>
-          <PendingSubtitle />
-        </Suspense>
-      </div>
+    <div className="space-y-6">
+      <AdminPageHeader
+        eyebrow="Kiểm duyệt"
+        title="Duyệt bài"
+        description={
+          <Suspense fallback={<Skeleton className="mt-1 h-4 w-48" />}>
+            <PendingSubtitle />
+          </Suspense>
+        }
+      />
       <Suspense fallback={<TableSkeleton />}>
         <PendingSection />
       </Suspense>

@@ -2,6 +2,7 @@ import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
 import { desc } from 'drizzle-orm';
 import { UsersTable } from './users-table';
+import { AdminPageHeader } from '@/components/admin/admin-page-header';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,11 +15,12 @@ export default async function Page() {
     .catch(() => []);
 
   return (
-    <div className="space-y-6 max-w-7xl">
-      <div>
-        <h1 className="text-2xl font-semibold">Người dùng</h1>
-        <p className="text-sm text-muted-foreground">{list.length} tài khoản</p>
-      </div>
+    <div className="space-y-6">
+      <AdminPageHeader
+        eyebrow="Tài khoản"
+        title="Người dùng"
+        description={`${list.length} tài khoản đang có trong hệ thống.`}
+      />
       <UsersTable users={list} />
     </div>
   );

@@ -2,6 +2,7 @@ import { db } from '@/lib/db';
 import { chapters } from '@/lib/db/schema';
 import { asc } from 'drizzle-orm';
 import { ChaptersClient } from './chapters-client';
+import { AdminPageHeader } from '@/components/admin/admin-page-header';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,13 +14,12 @@ export default async function Page() {
     .catch(() => []);
 
   return (
-    <div className="space-y-6 max-w-5xl">
-      <div>
-        <h1 className="text-2xl font-semibold">Chương</h1>
-        <p className="text-sm text-muted-foreground">
-          Quản lý chương theo lớp và chương trình
-        </p>
-      </div>
+    <div className="space-y-6">
+      <AdminPageHeader
+        eyebrow="Cấu trúc học tập"
+        title="Chương"
+        description="Quản lý chương theo cấp học và lớp để form tạo tài liệu lọc đúng nội dung."
+      />
       <ChaptersClient chapters={list} />
     </div>
   );

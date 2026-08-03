@@ -32,19 +32,28 @@ export function AdminTopbar({ user }: { user: User }) {
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-background/85 px-4 backdrop-blur-sm">
-      <div className="relative max-w-md flex-1">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/80 px-4 shadow-[0_10px_32px_-28px_rgba(15,23,42,0.75)] backdrop-blur-xl md:px-6">
+      <div className="hidden min-w-0 lg:block">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+          Admin
+        </p>
+        <p className="text-sm font-medium text-muted-foreground">
+          Điều hành nội dung Elevation Math
+        </p>
+      </div>
+
+      <div className="relative max-w-xl flex-1 lg:ml-4">
         <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Tìm kiếm…"
-          className="h-9 rounded-full bg-muted/40 pl-9"
+          className="h-10 rounded-2xl border-border/70 bg-muted/40 pl-9 shadow-sm"
         />
       </div>
 
       <div className="flex-1" />
 
       <Link href="/" target="_blank">
-        <Button variant="ghost" size="sm">
+        <Button variant="outline" size="sm">
           <Home className="size-4" />
           Xem site
         </Button>
@@ -58,7 +67,7 @@ export function AdminTopbar({ user }: { user: User }) {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center gap-2 rounded-full px-2 py-1 transition-colors hover:bg-accent">
+          <button className="flex items-center gap-2 rounded-full border bg-background px-2 py-1 shadow-sm transition-colors hover:bg-accent">
             <Avatar className="size-7">
               {user.avatarUrl && (
                 <AvatarImage src={user.avatarUrl} alt={user.fullName ?? ''} />

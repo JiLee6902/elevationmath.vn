@@ -6,6 +6,7 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs';
 import { OverviewChart } from '@/components/admin/overview-chart';
+import { AdminPageHeader } from '@/components/admin/admin-page-header';
 import { getStats } from '@/lib/db/queries';
 import { formatNumber } from '@/lib/utils';
 
@@ -21,13 +22,12 @@ export default async function Page() {
   }));
 
   return (
-    <div className="space-y-6 max-w-7xl">
-      <div>
-        <h1 className="text-2xl font-semibold">Thống kê</h1>
-        <p className="text-sm text-muted-foreground">
-          Tổng quan hoạt động trên hệ thống
-        </p>
-      </div>
+    <div className="space-y-6">
+      <AdminPageHeader
+        eyebrow="Analytics"
+        title="Thống kê"
+        description="Tổng quan hoạt động trên hệ thống: tài liệu, người dùng và lượt tải."
+      />
 
       <Tabs defaultValue="overview">
         <TabsList>

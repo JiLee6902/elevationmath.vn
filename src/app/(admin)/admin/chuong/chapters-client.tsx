@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -104,10 +105,13 @@ export function ChaptersClient({ chapters }: { chapters: Chapter[] }) {
 
   return (
     <>
-      <Card className="p-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">Cấp</p>
+      <Card className="p-4 shadow-sm">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+          <div className="grid flex-1 gap-3 md:grid-cols-2 lg:max-w-xl">
+            <div>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Cấp học
+              </p>
             <Select
               value={filter.level}
               onValueChange={(v) =>
@@ -118,7 +122,7 @@ export function ChaptersClient({ chapters }: { chapters: Chapter[] }) {
                 })
               }
             >
-              <SelectTrigger>
+              <SelectTrigger className="h-10">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -129,16 +133,18 @@ export function ChaptersClient({ chapters }: { chapters: Chapter[] }) {
                 ))}
               </SelectContent>
             </Select>
-          </div>
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">Lớp</p>
+            </div>
+            <div>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Lớp
+              </p>
             <Select
               value={String(filter.grade)}
               onValueChange={(v) =>
                 setFilter({ ...filter, grade: Number(v) })
               }
             >
-              <SelectTrigger>
+              <SelectTrigger className="h-10">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -149,8 +155,10 @@ export function ChaptersClient({ chapters }: { chapters: Chapter[] }) {
                 ))}
               </SelectContent>
             </Select>
+            </div>
           </div>
           <Button
+            className="lg:shrink-0"
             onClick={() => {
               form.reset({
                 level: filter.level,
@@ -168,37 +176,58 @@ export function ChaptersClient({ chapters }: { chapters: Chapter[] }) {
         </div>
       </Card>
 
-      <div className="space-y-2">
+      <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
         {filtered.length === 0 && (
           <Card className="p-10 text-center text-muted-foreground">
             Chưa có chương nào cho lớp {filter.grade}
           </Card>
         )}
-        {filtered.map((ch) => (
-          <Card
-            key={ch.id}
-            className="p-4 flex items-center gap-4"
-          >
-            <div className="size-9 rounded-md bg-primary/10 text-primary flex items-center justify-center font-semibold">
-              {ch.number}
+        {filtered.length > 0 && (
+          <div className="overflow-x-auto">
+            <div className="min-w-[720px]">
+              <div className="grid grid-cols-[80px_minmax(260px,1fr)_160px_90px] gap-4 border-b bg-muted/40 px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <span>Chương</span>
+                <span>Tên</span>
+                <span>Lớp</span>
+                <span className="text-right">Thao tác</span>
+              </div>
+
+              <div className="divide-y">
+                {filtered.map((ch) => (
+                  <div
+                    key={ch.id}
+                    className="grid grid-cols-[80px_minmax(260px,1fr)_160px_90px] items-center gap-4 px-4 py-3"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 font-semibold text-primary">
+                        {ch.number}
+                      </div>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">{ch.name}</p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        {ch.description || `Thứ tự ${ch.order}`}
+                      </p>
+                    </div>
+                    <Badge variant="secondary" className="w-fit rounded-full">
+                      {LEVELS[ch.level as LevelKey].name} · Lớp {ch.grade}
+                    </Badge>
+                    <div className="flex justify-end">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => deleteChapter(ch.id)}
+                        title="Xóa"
+                      >
+                        <Trash2 className="size-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="flex-1">
-              <p className="font-medium">{ch.name}</p>
-              {ch.description && (
-                <p className="text-xs text-muted-foreground">
-                  {ch.description}
-                </p>
-              )}
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => deleteChapter(ch.id)}
-            >
-              <Trash2 className="size-4 text-destructive" />
-            </Button>
-          </Card>
-        ))}
+          </div>
+        )}
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>

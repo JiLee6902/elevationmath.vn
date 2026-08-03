@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AdminPageHeader } from '@/components/admin/admin-page-header';
 import { getDocuments } from '@/lib/db/queries';
 import { DocsTable } from './docs-table';
 
@@ -15,21 +16,24 @@ export default async function Page({
 }) {
   const sp = await searchParams;
   return (
-    <div className="space-y-6 max-w-7xl">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Tài liệu</h1>
-          <Suspense fallback={<Skeleton className="h-4 w-32 mt-1" />}>
+    <div className="space-y-6">
+      <AdminPageHeader
+        eyebrow="Quản lý nội dung"
+        title="Tài liệu"
+        description={
+          <Suspense fallback={<Skeleton className="mt-1 h-4 w-32" />}>
             <DocsCount status={sp.status} />
           </Suspense>
-        </div>
-        <Link href="/admin/tai-lieu/new">
+        }
+        action={
+          <Link href="/admin/tai-lieu/new">
           <Button>
             <Plus className="size-4" />
             Tạo mới
           </Button>
-        </Link>
-      </div>
+          </Link>
+        }
+      />
       <Suspense fallback={<TableSkeleton />}>
         <DocsSection status={sp.status} />
       </Suspense>

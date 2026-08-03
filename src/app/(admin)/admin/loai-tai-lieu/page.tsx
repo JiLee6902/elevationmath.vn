@@ -2,6 +2,7 @@ import { asc } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { documentTypes } from '@/lib/db/schema';
 import { DocumentTypesClient } from './document-types-client';
+import { AdminPageHeader } from '@/components/admin/admin-page-header';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,13 +14,11 @@ export default async function Page() {
     .catch(() => []);
   return (
     <div className="w-full space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Loại tài liệu</h1>
-        <p className="text-sm text-muted-foreground">
-          Quản lý loại tài liệu và gắn cho nhiều lớp. Khi tạo tài liệu, admin
-          chỉ thấy các loại đã gắn cho cấp/lớp đang chọn.
-        </p>
-      </div>
+      <AdminPageHeader
+        eyebrow="Phân loại"
+        title="Loại tài liệu"
+        description="Quản lý loại tài liệu và gắn cho nhiều lớp. Khi tạo tài liệu, admin chỉ thấy các loại đã gắn cho cấp/lớp đang chọn."
+      />
       <DocumentTypesClient documentTypes={list} />
     </div>
   );

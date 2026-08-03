@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { DocForm } from '@/components/admin/doc-form';
+import { AdminPageHeader } from '@/components/admin/admin-page-header';
 import {
   getChapters,
   getDocumentById,
@@ -24,10 +25,11 @@ export default async function Page({
   if (!doc) notFound();
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Sửa tài liệu</h1>
-        <p className="text-sm text-muted-foreground">{doc.title}</p>
-      </div>
+      <AdminPageHeader
+        eyebrow="Tài liệu"
+        title="Sửa tài liệu"
+        description={doc.title}
+      />
       <DocForm
         doc={doc}
         chapters={chapters}
