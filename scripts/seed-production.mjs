@@ -33,6 +33,51 @@ const difficultyLevels = [
   ['nang_cao', 'Nâng cao', '#f59e0b', 2],
 ];
 
+// Nhóm loại tài liệu (tầng cha cố định cho mọi lớp).
+const documentCategories = [
+  ['Tài liệu Dạy & Học', 'day-va-hoc', 1],
+  ['Đề cương & Đề thi', 'de-cuong-de-thi', 2],
+  ['Tài liệu Luyện thi', 'luyen-thi', 3],
+  ['Tài liệu cho Giáo viên', 'giao-vien', 4],
+];
+
+// Suy ra nhóm cha từ tên loại tài liệu (best-effort theo từ khoá).
+function categorySlugForType(name) {
+  const n = name.toLowerCase();
+  if (
+    n.includes('giáo án') ||
+    n.includes('bài giảng') ||
+    n.includes('giáo viên') ||
+    n.includes('sách giáo viên')
+  )
+    return 'giao-vien';
+  if (
+    n.includes('đề cương') ||
+    n.includes('đề thi') ||
+    n.includes('đề kiểm tra') ||
+    n.includes('kiểm tra')
+  )
+    return 'de-cuong-de-thi';
+  if (
+    n.includes('luyện thi') ||
+    n.includes('kangaroo') ||
+    n.includes('olympic') ||
+    n.includes('timo') ||
+    n.includes('sasmo') ||
+    n.includes('imc') ||
+    n.includes('vtmo') ||
+    n.includes('hsg') ||
+    n.includes('vào 10') ||
+    n.includes('vào lớp') ||
+    n.includes('chuyên') ||
+    n.includes('đánh giá năng lực') ||
+    n.includes('sat') ||
+    n.includes('thpt quốc gia')
+  )
+    return 'luyen-thi';
+  return 'day-va-hoc';
+}
+
 const distributionTypeName = 'Phân phối CT Toán (Mới)';
 const chapterNames = ['Số và phép tính', 'Hình học và đo lường', 'Thống kê và xác suất'];
 
@@ -98,6 +143,23 @@ try {
     `;
   }
 
+  for (const category of documentCategories) {
+    await sql`
+      insert into document_categories (name, slug, "order", is_active)
+      values (${category[0]}, ${category[1]}, ${category[2]}, true)
+      on conflict (slug) do update
+        set name = excluded.name,
+            "order" = excluded."order",
+            is_active = true,
+            updated_at = now()
+    `;
+  }
+
+  const categoryRows = await sql`select id, slug from document_categories`;
+  const categoryIdBySlug = Object.fromEntries(
+    categoryRows.map((r) => [r.slug, r.id]),
+  );
+
   for (const grade of [1, 2]) {
     for (const [index, name] of chapterNames.entries()) {
       await sql`
@@ -112,10 +174,11 @@ try {
 
     for (const [index, name] of documentTypes.entries()) {
       await sql`
-        insert into document_types (name, slug, level, grade, "order", is_active)
-        values (${name}, ${slugify(`tieu-hoc-lop-${grade}-${name}`)}, 'tieu_hoc', ${grade}, ${index + 1}, true)
+        insert into document_types (name, slug, category_id, level, grade, "order", is_active)
+        values (${name}, ${slugify(`tieu-hoc-lop-${grade}-${name}`)}, ${categoryIdBySlug[categorySlugForType(name)]}, 'tieu_hoc', ${grade}, ${index + 1}, true)
         on conflict (slug) do update
           set name = excluded.name,
+              category_id = excluded.category_id,
               "order" = excluded."order",
               is_active = true,
               updated_at = now()
@@ -126,15 +189,27 @@ try {
   for (const grade of [3, 4, 5, 6, 7, 8, 9]) {
     const level = levelForGrade(grade);
     await sql`
-      insert into document_types (name, slug, level, grade, "order", is_active)
-      values (${distributionTypeName}, ${slugify(`${level}-lop-${grade}-${distributionTypeName}`)}, ${level}, ${grade}, 1, true)
+      insert into document_types (name, slug, category_id, level, grade, "order", is_active)
+      values (${distributionTypeName}, ${slugify(`${level}-lop-${grade}-${distributionTypeName}`)}, ${categoryIdBySlug[categorySlugForType(distributionTypeName)]}, ${level}, ${grade}, 1, true)
       on conflict (slug) do update
         set name = excluded.name,
+            category_id = excluded.category_id,
             level = excluded.level,
             grade = excluded.grade,
             "order" = excluded."order",
             is_active = true,
             updated_at = now()
+    `;
+  }
+
+  // Backfill: gán nhóm cho mọi loại tài liệu chưa có nhóm (kể cả loại do
+  // admin tạo trước khi có tính năng này).
+  const untypedRows = await sql`select id, name from document_types where category_id is null`;
+  for (const row of untypedRows) {
+    await sql`
+      update document_types
+      set category_id = ${categoryIdBySlug[categorySlugForType(row.name)]}, updated_at = now()
+      where id = ${row.id}
     `;
   }
 

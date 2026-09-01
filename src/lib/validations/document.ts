@@ -49,6 +49,7 @@ export type ProgramGroupCreateInput = z.input<typeof programGroupCreateSchema>;
 export const documentTypeCreateSchema = z.object({
   name: z.string().min(2, 'Tên tối thiểu 2 ký tự').max(120),
   slug: z.string().min(2).max(160).optional(),
+  categoryId: z.string().uuid().nullish(),
   level: z.enum(['tieu_hoc', 'thcs', 'thpt']),
   grade: z.number().int().min(1).max(12),
   order: z.number().int().min(0).max(999).default(0),

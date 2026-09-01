@@ -5,6 +5,7 @@ import {
   documents,
   chapters,
   documentTypes,
+  documentCategories,
   difficultyLevels,
   programGroups,
   users,
@@ -74,6 +75,15 @@ export async function getDocumentTypes(
     .from(documentTypes)
     .where(conditions.length ? and(...conditions) : undefined)
     .orderBy(asc(documentTypes.order), asc(documentTypes.name));
+}
+
+/** Nhóm loại tài liệu (tầng cha) — dùng để gom loại tài liệu theo nhóm. */
+export async function getDocumentCategories(includeHidden = false) {
+  return db
+    .select()
+    .from(documentCategories)
+    .where(includeHidden ? undefined : eq(documentCategories.isActive, true))
+    .orderBy(asc(documentCategories.order), asc(documentCategories.name));
 }
 
 export async function getDifficultyLevels(includeHidden = false) {
