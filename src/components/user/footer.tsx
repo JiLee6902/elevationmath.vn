@@ -13,13 +13,6 @@ import {
 import { LEVELS } from '@/lib/constants';
 import { LogoWordmark } from './logo-mark';
 
-const POPULAR_LINKS = [
-  { label: 'Toán 9 — luyện thi vào 10', href: '/thcs/lop-9' },
-  { label: 'Toán 12 — luyện thi THPT', href: '/thpt/lop-12' },
-  { label: 'Toán 6', href: '/thcs/lop-6' },
-  { label: 'Toán 5 — Tiểu học', href: '/tieu-hoc/lop-5' },
-];
-
 export function Footer() {
   return (
     <footer className="relative overflow-hidden border-t bg-card/40 mt-auto">
@@ -56,7 +49,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="md:col-span-2">
+        <div className="md:col-span-3">
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
             Cấp học
           </p>
@@ -66,23 +59,13 @@ export function Footer() {
                 <FooterLink href={`/${l.slug}`}>{l.name}</FooterLink>
               </li>
             ))}
+            <li>
+              <FooterLink href="/tim-kiem">Tìm kiếm tài liệu</FooterLink>
+            </li>
           </ul>
         </div>
 
-        <div className="md:col-span-2">
-          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
-            Phổ biến
-          </p>
-          <ul className="space-y-2.5 text-muted-foreground">
-            {POPULAR_LINKS.map((l) => (
-              <li key={l.href}>
-                <FooterLink href={l.href}>{l.label}</FooterLink>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="col-span-2 md:col-span-4">
+        <div className="col-span-2 md:col-span-5">
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
             Hệ thống Dạy học &amp; Luyện thi
           </p>
@@ -102,7 +85,7 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-2.5">
                 <MapPin className="mt-0.5 size-4 shrink-0 text-primary/70" />
-                <span>Số 35/31c Bế Văn Cấm, Tân Hưng, TP. Hồ Chí Minh</span>
+                <span>Số 35/33c1 Bế Văn Cấm, Tân Hưng, TP. Hồ Chí Minh</span>
               </li>
             </ul>
             <div className="mt-3.5 flex flex-wrap gap-2">
