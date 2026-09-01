@@ -67,7 +67,7 @@ try {
     insert into users (email, password_hash, full_name, role, is_verified)
     values (${ADMIN_EMAIL}, ${passwordHash}, 'Elevation Math Admin', 'super_admin', true)
     on conflict (email) do update
-      set role = 'super_admin', is_verified = true, updated_at = now()
+      set password_hash = ${passwordHash}, role = 'super_admin', is_verified = true, updated_at = now()
     returning id
   `;
 
