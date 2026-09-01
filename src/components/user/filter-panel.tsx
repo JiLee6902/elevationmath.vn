@@ -4,7 +4,7 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Check } from 'lucide-react';
 import { DIFFICULTIES } from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import type { DocumentType } from '@/lib/db/schema';
+import type { DocumentCategory, DocumentType } from '@/lib/db/schema';
 
 function parseCsv(value: string | null): string[] {
   if (!value) return [];
@@ -17,7 +17,13 @@ function toggleValue(list: string[], value: string): string[] {
     : [...list, value];
 }
 
-export function FilterPanel({ documentTypes }: { documentTypes: DocumentType[] }) {
+export function FilterPanel({
+  documentTypes,
+  categories = [],
+}: {
+  documentTypes: DocumentType[];
+  categories?: DocumentCategory[];
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -34,6 +40,29 @@ export function FilterPanel({ documentTypes }: { documentTypes: DocumentType[] }
     router.push(qs ? `${pathname}?${qs}` : pathname);
   }
 
+  // Gom loại tài liệu theo nhóm cha (giữ thứ tự nhóm), phần chưa gán nhóm
+  // rơi vào "Khác".
+  const grouped = categories
+    .map((cat) => ({
+      cat,
+      types: documentTypes.filter((t) => t.categoryId === cat.id),
+    }))
+    .filter((g) => g.types.length > 0);
+  const categoryIds = new Set(categories.map((c) => c.id));
+  const uncategorized = documentTypes.filter(
+    (t) => !t.categoryId || !categoryIds.has(t.categoryId),
+  );
+
+  const renderTypeRow = (type: DocumentType) => (
+    <CheckRow
+      key={type.id}
+      checked={activeTypes.includes(type.id)}
+      onClick={() => setMulti('type', toggleValue(activeTypes, type.id))}
+    >
+      {type.name}
+    </CheckRow>
+  );
+
   return (
     <div className="space-y-6">
       <Section
@@ -44,15 +73,30 @@ export function FilterPanel({ documentTypes }: { documentTypes: DocumentType[] }
           ) : null
         }
       >
-        {documentTypes.map((type) => (
-          <CheckRow
-            key={type.id}
-            checked={activeTypes.includes(type.id)}
-            onClick={() => setMulti('type', toggleValue(activeTypes, type.id))}
-          >
-            {type.name}
-          </CheckRow>
-        ))}
+        {grouped.length > 0 ? (
+          <div className="space-y-3">
+            {grouped.map(({ cat, types }) => (
+              <div key={cat.id}>
+                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-foreground/50">
+                  {cat.name}
+                </p>
+                <div className="space-y-0.5">{types.map(renderTypeRow)}</div>
+              </div>
+            ))}
+            {uncategorized.length > 0 && (
+              <div>
+                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-foreground/50">
+                  Khác
+                </p>
+                <div className="space-y-0.5">
+                  {uncategorized.map(renderTypeRow)}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          documentTypes.map(renderTypeRow)
+        )}
       </Section>
 
       <Section

@@ -33,8 +33,204 @@ const difficultyLevels = [
   ['nang_cao', 'Nâng cao', '#f59e0b', 2],
 ];
 
+// Nhóm loại tài liệu (tầng cha cố định cho mọi lớp).
+const documentCategories = [
+  ['Tài liệu Dạy & Học', 'day-va-hoc', 1],
+  ['Đề cương & Đề thi', 'de-cuong-de-thi', 2],
+  ['Tài liệu Luyện thi', 'luyen-thi', 3],
+  ['Tài liệu cho Giáo viên', 'giao-vien', 4],
+];
+
+// Suy ra nhóm cha từ tên loại tài liệu (best-effort theo từ khoá).
+function categorySlugForType(name) {
+  const n = name.toLowerCase();
+  if (
+    n.includes('giáo án') ||
+    n.includes('bài giảng') ||
+    n.includes('giáo viên') ||
+    n.includes('sách giáo viên')
+  )
+    return 'giao-vien';
+  if (
+    n.includes('đề cương') ||
+    n.includes('đề thi') ||
+    n.includes('đề kiểm tra') ||
+    n.includes('kiểm tra')
+  )
+    return 'de-cuong-de-thi';
+  if (
+    n.includes('luyện thi') ||
+    n.includes('kangaroo') ||
+    n.includes('olympic') ||
+    n.includes('timo') ||
+    n.includes('sasmo') ||
+    n.includes('imc') ||
+    n.includes('vtmo') ||
+    n.includes('hsg') ||
+    n.includes('vào 10') ||
+    n.includes('vào lớp') ||
+    n.includes('chuyên') ||
+    n.includes('đánh giá năng lực') ||
+    n.includes('sat') ||
+    n.includes('thpt quốc gia')
+  )
+    return 'luyen-thi';
+  return 'day-va-hoc';
+}
+
 const distributionTypeName = 'Phân phối CT Toán (Mới)';
 const chapterNames = ['Số và phép tính', 'Hình học và đo lường', 'Thống kê và xác suất'];
+
+// Danh mục loại tài liệu chi tiết theo từng lớp (nguồn: "Nội dung phân loại").
+// Nhóm "Đề cương & Đề thi" và "Giáo viên" giống nhau ở mọi lớp.
+const EXAM_TYPES = [
+  'Đề cương ôn tập giữa học kỳ I',
+  'Đề cương ôn tập học kỳ I',
+  'Đề cương ôn tập giữa học kỳ II',
+  'Đề cương ôn tập học kỳ II',
+  'Đề kiểm tra giữa học kỳ I',
+  'Đề kiểm tra học kỳ I',
+  'Đề kiểm tra giữa học kỳ II',
+  'Đề kiểm tra học kỳ II',
+];
+const TEACHER_TYPES = [
+  'Giáo án',
+  'Bài giảng điện tử',
+  'Sách giáo viên',
+  'Tài liệu khác',
+];
+const COMPETITION_PRIMARY = [
+  'Toán Quốc tế Kangaroo (IKMC)',
+  'Olympic Toán Quốc tế TIMO',
+  'Kỳ thi Olympic Toán Singapore và Châu Á (SASMO)',
+  'Kỳ thi Toán học Quốc tế IMC',
+  'Olympic Toán Titan Việt Nam (VTMO)',
+];
+
+// Nhóm "Dạy & Học" theo lớp.
+const TEACHING_BY_GRADE = {
+  1: [
+    'Sách giáo khoa Toán 1 (PDF)',
+    'Phiếu rèn kỹ năng làm Toán tuần',
+    'Sách toán hay lớp 1 (PDF)',
+    'Toán tư duy lớp 1',
+  ],
+  2: [
+    'Sách giáo khoa Toán 2 (PDF)',
+    'Phiếu rèn kỹ năng làm Toán tuần',
+    'Tài liệu Trọng tâm Toán 2 (Theo chuyên đề)',
+    'Tài liệu nâng cao Toán 2 (Theo chuyên đề)',
+    'Sách toán hay lớp 2 (PDF)',
+    'Toán tư duy lớp 2',
+  ],
+  3: [
+    'Sách giáo khoa Toán 3 (PDF)',
+    'Phiếu rèn kỹ năng làm Toán tuần',
+    'Tài liệu Trọng tâm Toán 3 (Theo chuyên đề)',
+    'Tài liệu nâng cao Toán 3 (Theo chuyên đề)',
+    'Sách toán hay lớp 3 (PDF)',
+    'Toán tư duy lớp 3',
+  ],
+  4: [
+    'Sách giáo khoa Toán 4 (PDF)',
+    'Phiếu rèn kỹ năng làm Toán tuần Lớp 4',
+    'Tài liệu Trọng tâm Toán 4 (Theo chuyên đề)',
+    'Tài liệu nâng cao Toán 4 (Theo chuyên đề)',
+    'Sách toán hay lớp 4 (PDF)',
+    'Toán tư duy lớp 4',
+    'Tài liệu luyện thi Chuyên – CLC',
+  ],
+  5: [
+    'Sách giáo khoa Toán 5 (PDF)',
+    'Phiếu rèn kỹ năng làm Toán tuần',
+    'Tài liệu Trọng tâm Toán 5 (Theo chuyên đề)',
+    'Tài liệu nâng cao Toán 5 (Theo chuyên đề)',
+    'Sách toán hay lớp 5 (PDF)',
+    'Tài liệu luyện thi Chuyên – CLC',
+    'Ngân hàng đề thi vào lớp 6 CLC – Chuyên',
+    'Đề thi vào lớp 6 các trường chuyên qua các năm',
+  ],
+  6: [
+    'Sách giáo khoa Toán 6 (PDF)',
+    'Phiếu rèn kỹ năng làm Toán tuần',
+    'Tài liệu Trọng tâm Toán 6 (Theo chuyên đề)',
+    'Tài liệu nâng cao Toán 6 (Theo chuyên đề)',
+    'Sách toán hay lớp 6 (PDF)',
+    'Tài liệu luyện thi HSG 6',
+  ],
+  7: [
+    'Sách giáo khoa Toán 7 (PDF)',
+    'Phiếu rèn kỹ năng làm Toán tuần',
+    'Tài liệu Trọng tâm Toán 7 (Theo chuyên đề)',
+    'Tài liệu nâng cao Toán 7 (Theo chuyên đề)',
+    'Sách toán hay lớp 7 (PDF)',
+    'Tài liệu luyện thi HSG 7',
+  ],
+  8: [
+    'Sách giáo khoa Toán 8 (PDF)',
+    'Phiếu rèn kỹ năng làm Toán tuần',
+    'Tài liệu Trọng tâm Toán 8 (Theo chuyên đề)',
+    'Tài liệu nâng cao Toán 8 (Theo chuyên đề)',
+    'Sách toán hay lớp 8 (PDF)',
+    'Tài liệu luyện thi HSG 8',
+  ],
+  9: [
+    'Sách giáo khoa Toán 9 (PDF)',
+    'Phiếu rèn kỹ năng làm Toán tuần',
+    'Tài liệu Trọng tâm Toán 9 (Theo chuyên đề)',
+    'Tài liệu nâng cao Toán 9 (Theo chuyên đề)',
+    'Sách toán hay lớp 9 (PDF)',
+    'Tài liệu luyện thi vào lớp 10',
+    'Tài liệu luyện thi vào lớp 10 chuyên Toán',
+    'Ngân hàng đề thi thử vào lớp 10',
+    'Đề thi thử và đề thi chính thức vào lớp 10 các trường THPT cập nhật mới nhất',
+    'Tài liệu luyện thi HSG',
+    'Đề thi vào các trường THPT Chuyên',
+  ],
+  10: [
+    'Sách giáo khoa Toán 10 (PDF)',
+    'Tài liệu Toán theo chuyên đề lớp 10',
+    'Tài liệu Bồi dưỡng nâng cao Toán 10',
+    'Tài liệu chuyên Toán 10',
+    'Sách toán hay lớp 10 (PDF)',
+    'Tài liệu Toán Cambridge 10',
+  ],
+  11: [
+    'Sách giáo khoa Toán 11 (PDF)',
+    'Tài liệu Toán theo chuyên đề lớp 11',
+    'Tài liệu Bồi dưỡng nâng cao Toán 11',
+    'Tài liệu chuyên Toán 11',
+    'Sách toán hay lớp 11 (PDF)',
+    'Tài liệu Toán Cambridge 11',
+    'Tài liệu Đánh giá năng lực 11',
+  ],
+  12: [
+    'Sách giáo khoa Toán 12 (PDF)',
+    'Tài liệu Toán theo chuyên đề lớp 12',
+    'Tài liệu Bồi dưỡng nâng cao Toán 12',
+    'Tài liệu luyện thi THPT Quốc Gia',
+    'Tài liệu chuyên Toán 12',
+    'Sách toán hay lớp 12 (PDF)',
+    'Tài liệu Toán Cambridge 12',
+    'Tài liệu đánh giá năng lực 12',
+  ],
+};
+
+// Nhóm "Luyện thi" theo lớp (lớp nào không có thì để rỗng).
+const COMPETITION_BY_GRADE = {
+  1: [],
+  2: COMPETITION_PRIMARY,
+  3: COMPETITION_PRIMARY,
+  4: COMPETITION_PRIMARY,
+  5: COMPETITION_PRIMARY,
+  6: COMPETITION_PRIMARY,
+  7: COMPETITION_PRIMARY,
+  8: [],
+  9: [],
+  10: [],
+  11: ['Tài liệu luyện thi Đánh giá năng lực', 'Tài liệu luyện thi SAT'],
+  12: ['Luyện thi Đánh giá năng lực', 'Luyện thi SAT'],
+};
 
 function slugify(value) {
   return value
@@ -98,6 +294,23 @@ try {
     `;
   }
 
+  for (const category of documentCategories) {
+    await sql`
+      insert into document_categories (name, slug, "order", is_active)
+      values (${category[0]}, ${category[1]}, ${category[2]}, true)
+      on conflict (slug) do update
+        set name = excluded.name,
+            "order" = excluded."order",
+            is_active = true,
+            updated_at = now()
+    `;
+  }
+
+  const categoryRows = await sql`select id, slug from document_categories`;
+  const categoryIdBySlug = Object.fromEntries(
+    categoryRows.map((r) => [r.slug, r.id]),
+  );
+
   for (const grade of [1, 2]) {
     for (const [index, name] of chapterNames.entries()) {
       await sql`
@@ -109,32 +322,44 @@ try {
         )
       `;
     }
+  }
 
-    for (const [index, name] of documentTypes.entries()) {
-      await sql`
-        insert into document_types (name, slug, level, grade, "order", is_active)
-        values (${name}, ${slugify(`tieu-hoc-lop-${grade}-${name}`)}, 'tieu_hoc', ${grade}, ${index + 1}, true)
-        on conflict (slug) do update
-          set name = excluded.name,
-              "order" = excluded."order",
-              is_active = true,
-              updated_at = now()
-      `;
+  // Seed toàn bộ danh mục loại tài liệu cho 12 lớp, gom theo 4 nhóm.
+  // Thứ tự chạy liên tục theo nhóm để giữ đúng thứ tự hiển thị.
+  for (let grade = 1; grade <= 12; grade++) {
+    const level = levelForGrade(grade);
+    const sections = [
+      ['day-va-hoc', TEACHING_BY_GRADE[grade] ?? []],
+      ['de-cuong-de-thi', EXAM_TYPES],
+      ['luyen-thi', COMPETITION_BY_GRADE[grade] ?? []],
+      ['giao-vien', TEACHER_TYPES],
+    ];
+    let order = 1;
+    for (const [catSlug, names] of sections) {
+      for (const name of names) {
+        await sql`
+          insert into document_types (name, slug, category_id, level, grade, "order", is_active)
+          values (${name}, ${slugify(`${level}-lop-${grade}-${name}`)}, ${categoryIdBySlug[catSlug]}, ${level}, ${grade}, ${order}, true)
+          on conflict (slug) do update
+            set name = excluded.name,
+                category_id = excluded.category_id,
+                "order" = excluded."order",
+                is_active = true,
+                updated_at = now()
+        `;
+        order++;
+      }
     }
   }
 
-  for (const grade of [3, 4, 5, 6, 7, 8, 9]) {
-    const level = levelForGrade(grade);
+  // Backfill: gán nhóm cho mọi loại tài liệu chưa có nhóm (kể cả loại do
+  // admin tạo trước khi có tính năng này).
+  const untypedRows = await sql`select id, name from document_types where category_id is null`;
+  for (const row of untypedRows) {
     await sql`
-      insert into document_types (name, slug, level, grade, "order", is_active)
-      values (${distributionTypeName}, ${slugify(`${level}-lop-${grade}-${distributionTypeName}`)}, ${level}, ${grade}, 1, true)
-      on conflict (slug) do update
-        set name = excluded.name,
-            level = excluded.level,
-            grade = excluded.grade,
-            "order" = excluded."order",
-            is_active = true,
-            updated_at = now()
+      update document_types
+      set category_id = ${categoryIdBySlug[categorySlugForType(row.name)]}, updated_at = now()
+      where id = ${row.id}
     `;
   }
 

@@ -98,6 +98,22 @@ export const programGroups = pgTable(
   (t) => [index('program_group_order_idx').on(t.order)],
 );
 
+// Nhóm loại tài liệu — tầng cha cố định trên document types (Dạy & Học,
+// Đề cương & Đề thi, Luyện thi, Giáo viên). Dùng chung cho mọi lớp.
+export const documentCategories = pgTable(
+  'document_categories',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    name: text('name').notNull(),
+    slug: text('slug').notNull().unique(),
+    order: integer('order').default(0).notNull(),
+    isActive: boolean('is_active').default(true).notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (t) => [index('document_category_order_idx').on(t.order)],
+);
+
 // Loại tài liệu được quản lý động theo từng lớp. Cùng một tên có thể được
 // khai báo riêng cho các lớp khác nhau vì nhu cầu tài liệu không giống nhau.
 export const documentTypes = pgTable(
@@ -106,6 +122,9 @@ export const documentTypes = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     name: text('name').notNull(),
     slug: text('slug').notNull().unique(),
+    categoryId: uuid('category_id').references(() => documentCategories.id, {
+      onDelete: 'set null',
+    }),
     level: educationLevelEnum('level').notNull(),
     grade: integer('grade').notNull(),
     order: integer('order').default(0).notNull(),
@@ -113,7 +132,10 @@ export const documentTypes = pgTable(
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
   },
-  (t) => [index('document_type_grade_idx').on(t.level, t.grade, t.order)],
+  (t) => [
+    index('document_type_grade_idx').on(t.level, t.grade, t.order),
+    index('document_type_category_idx').on(t.categoryId),
+  ],
 );
 
 // Mức độ tài liệu. Key vẫn bám enum `difficulty` để không phá dữ liệu cũ,
@@ -236,9 +258,23 @@ export const programGroupsRelations = relations(programGroups, ({ many }) => ({
   documents: many(documents),
 }));
 
-export const documentTypesRelations = relations(documentTypes, ({ many }) => ({
-  documents: many(documents),
-}));
+export const documentCategoriesRelations = relations(
+  documentCategories,
+  ({ many }) => ({
+    documentTypes: many(documentTypes),
+  }),
+);
+
+export const documentTypesRelations = relations(
+  documentTypes,
+  ({ one, many }) => ({
+    category: one(documentCategories, {
+      fields: [documentTypes.categoryId],
+      references: [documentCategories.id],
+    }),
+    documents: many(documents),
+  }),
+);
 
 export const usersRelations = relations(users, ({ many }) => ({
   documents: many(documents),
@@ -275,6 +311,8 @@ export type Chapter = typeof chapters.$inferSelect;
 export type NewChapter = typeof chapters.$inferInsert;
 export type ProgramGroup = typeof programGroups.$inferSelect;
 export type NewProgramGroup = typeof programGroups.$inferInsert;
+export type DocumentCategory = typeof documentCategories.$inferSelect;
+export type NewDocumentCategory = typeof documentCategories.$inferInsert;
 export type DocumentType = typeof documentTypes.$inferSelect;
 export type NewDocumentType = typeof documentTypes.$inferInsert;
 export type DifficultyLevel = typeof difficultyLevels.$inferSelect;

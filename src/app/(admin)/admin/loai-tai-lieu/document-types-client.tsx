@@ -16,11 +16,12 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { LEVELS, type LevelKey } from '@/lib/constants';
-import type { DocumentType } from '@/lib/db/schema';
+import type { DocumentCategory, DocumentType } from '@/lib/db/schema';
 
 type Draft = {
   key?: string;
   name: string;
+  categoryId: string | null;
   grades: number[];
   order: number;
   isActive: boolean;
@@ -28,6 +29,7 @@ type Draft = {
 
 const EMPTY: Draft = {
   name: '',
+  categoryId: null,
   grades: [1],
   order: 0,
   isActive: true,
@@ -36,6 +38,7 @@ const EMPTY: Draft = {
 type DocumentTypeGroup = {
   key: string;
   name: string;
+  categoryId: string | null;
   grades: number[];
   order: number;
   isActive: boolean;
@@ -67,6 +70,7 @@ function groupDocumentTypes(documentTypes: DocumentType[]) {
     map.set(key, {
       key,
       name: type.name,
+      categoryId: type.categoryId ?? null,
       grades: [type.grade],
       order: type.order,
       isActive: type.isActive,
@@ -84,8 +88,10 @@ function groupDocumentTypes(documentTypes: DocumentType[]) {
 
 export function DocumentTypesClient({
   documentTypes,
+  categories,
 }: {
   documentTypes: DocumentType[];
+  categories: DocumentCategory[];
 }) {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
@@ -94,6 +100,10 @@ export function DocumentTypesClient({
   const groups = React.useMemo(
     () => groupDocumentTypes(documentTypes),
     [documentTypes],
+  );
+  const categoryNameById = React.useMemo(
+    () => new Map(categories.map((category) => [category.id, category.name])),
+    [categories],
   );
 
   function openCreate() {
@@ -105,6 +115,7 @@ export function DocumentTypesClient({
     setDraft({
       key: group.key,
       name: group.name,
+      categoryId: group.categoryId,
       grades: group.grades,
       order: group.order,
       isActive: group.isActive,
@@ -144,6 +155,7 @@ export function DocumentTypesClient({
           const existing = currentByGrade.get(grade);
           const payload = {
             name: draft.name.trim(),
+            categoryId: draft.categoryId,
             level,
             grade,
             order: draft.order,
@@ -251,6 +263,9 @@ export function DocumentTypesClient({
                   <div className="min-w-0">
                     <p className="truncate font-medium">{group.name}</p>
                     <p className="text-xs text-muted-foreground">
+                      {group.categoryId
+                        ? `${categoryNameById.get(group.categoryId) ?? 'Nhóm khác'} · `
+                        : ''}
                       {group.grades.length} lớp · {group.isActive ? 'Đang hiển thị' : 'Đang ẩn'}
                     </p>
                   </div>
@@ -280,6 +295,26 @@ export function DocumentTypesClient({
           <DialogHeader><DialogTitle>{draft.key ? 'Sửa loại tài liệu' : 'Thêm loại tài liệu'}</DialogTitle></DialogHeader>
           <div className="space-y-4">
             <label className="space-y-1.5 text-sm font-medium"><span>Tên loại</span><Input value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} placeholder="VD: Phiếu rèn kỹ năng Tuần" /></label>
+            <label className="space-y-1.5 text-sm font-medium">
+              <span>Nhóm</span>
+              <select
+                value={draft.categoryId ?? ''}
+                onChange={(event) =>
+                  setDraft({
+                    ...draft,
+                    categoryId: event.target.value || null,
+                  })
+                }
+                className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              >
+                <option value="">— Chưa phân nhóm —</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </label>
             <div className="space-y-2">
               <p className="text-sm font-medium">Lớp áp dụng</p>
               <div className="grid gap-3 rounded-xl border p-3 sm:grid-cols-3">

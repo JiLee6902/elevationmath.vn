@@ -7,7 +7,11 @@ import { DocGrid } from './doc-grid';
 import { EmptyState } from '@/components/shared/empty-state';
 import { BookOpen } from 'lucide-react';
 import { LEVELS, type LevelKey } from '@/lib/constants';
-import { getDocuments, getDocumentTypes } from '@/lib/db/queries';
+import {
+  getDocuments,
+  getDocumentTypes,
+  getDocumentCategories,
+} from '@/lib/db/queries';
 
 type SearchParams = Record<string, string | string[] | undefined>;
 const pick = (value: string | string[] | undefined) => typeof value === 'string' ? value : undefined;
@@ -16,7 +20,7 @@ const csv = (value: string | undefined) => value?.split(',').map((item) => item.
 export async function GradePage({ level, grade, searchParams }: { level: LevelKey; grade: number; searchParams: Promise<SearchParams> }) {
   if (!LEVELS[level].grades.includes(grade as never)) notFound();
   const params = await searchParams;
-  const [result, documentTypes] = await Promise.all([
+  const [result, documentTypes, categories] = await Promise.all([
     getDocuments({
       level,
       grade,
@@ -27,6 +31,7 @@ export async function GradePage({ level, grade, searchParams }: { level: LevelKe
       limit: 24,
     }),
     getDocumentTypes({ level, grade }),
+    getDocumentCategories(),
   ]);
 
   return (
@@ -41,7 +46,7 @@ export async function GradePage({ level, grade, searchParams }: { level: LevelKe
         </div>
       </section>
       <div className="container mx-auto flex gap-8 px-4 pt-8">
-        <SidebarFilter documentTypes={documentTypes} />
+        <SidebarFilter documentTypes={documentTypes} categories={categories} />
         <main className="min-w-0 flex-1">
           <FilterToolbar total={result.total} documentTypes={documentTypes} />
           {result.data.length > 0 ? <DocGrid docs={result.data} /> : <EmptyState icon={BookOpen} title="Chưa có tài liệu" description="Tài liệu cho lớp này sẽ sớm được cập nhật." />}
