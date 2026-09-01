@@ -77,7 +77,7 @@ export function FilterPanel({
           <div className="space-y-3">
             {grouped.map(({ cat, types }) => (
               <div key={cat.id}>
-                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-foreground/50">
+                <p className="mb-1.5 px-2 text-[13px] font-bold uppercase tracking-[0.08em] text-foreground/70">
                   {cat.name}
                 </p>
                 <div className="space-y-0.5">{types.map(renderTypeRow)}</div>
@@ -85,7 +85,7 @@ export function FilterPanel({
             ))}
             {uncategorized.length > 0 && (
               <div>
-                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-foreground/50">
+                <p className="mb-1.5 px-2 text-[13px] font-bold uppercase tracking-[0.08em] text-foreground/70">
                   Khác
                 </p>
                 <div className="space-y-0.5">

@@ -75,16 +75,25 @@ export function Footer() {
 
         <div className="md:col-span-3">
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
-            Khám phá
+            Hệ thống Dạy học &amp; Luyện thi Elevation Math
           </p>
-          <ul className="space-y-2.5 text-muted-foreground">
-            <li>
-              <FooterLink href="/tim-kiem">Tìm kiếm tài liệu</FooterLink>
-            </li>
-            <li>
-              <FooterLink href="/thpt">Tài liệu THPT</FooterLink>
-            </li>
-          </ul>
+          <div className="space-y-1.5 leading-relaxed text-muted-foreground">
+            <p className="font-medium text-foreground/80">
+              Công ty TNHH Đào tạo và Phát triển Giáo dục EMATH
+            </p>
+            <p>MST: 0318915841</p>
+            <p>Địa chỉ: Số 35/31c Bế Văn Cấm, Tân Hưng, TP Hồ Chí Minh</p>
+            <p>
+              Hotline:{' '}
+              <a href="tel:0971321032" className="transition-colors hover:text-foreground">
+                0971321032
+              </a>
+              {' – '}
+              <a href="tel:0988383732" className="transition-colors hover:text-foreground">
+                0988383732
+              </a>
+            </p>
+          </div>
         </div>
       </div>
       <div className="border-t border-border/60">
