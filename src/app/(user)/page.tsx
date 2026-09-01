@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { LEVELS, type LevelKey } from '@/lib/constants';
 import type { Document, DocumentType, ProgramGroup } from '@/lib/db/schema';
 import { DocCarousel } from '@/components/user/doc-carousel';
+import { CoursesSection } from '@/components/user/courses-section';
 import { SearchForm } from '@/components/user/search-form';
 import { LEVEL_VISUALS } from '@/components/user/level-visuals';
 import {
@@ -189,6 +190,9 @@ export default async function HomePage() {
           </Suspense>
         </div>
       ))}
+
+      {/* Các khóa học (Online & Offline) */}
+      <CoursesSection />
 
       {/* Vì sao Elevation Math */}
       <section className="reveal mt-16 border-y bg-muted/40">

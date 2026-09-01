@@ -3,7 +3,6 @@ import Link from 'next/link';
 import {
   ArrowRight,
   Globe,
-  Heart,
   Mail,
   MapPin,
   MessageCircle,
@@ -70,7 +69,7 @@ export function Footer() {
           </ul>
         </div>
 
-        <div className="md:col-span-3">
+        <div className="md:col-span-2">
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
             Phổ biến
           </p>
@@ -83,7 +82,7 @@ export function Footer() {
           </ul>
         </div>
 
-        <div className="col-span-2 md:col-span-3">
+        <div className="col-span-2 md:col-span-4">
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
             Hệ thống Dạy học &amp; Luyện thi
           </p>
@@ -124,11 +123,13 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-border/60">
-        <div className="container mx-auto px-4 py-4 text-xs text-muted-foreground flex flex-col sm:flex-row gap-2 items-center justify-between">
-          <span>© {new Date().getFullYear()} Elevation Math · Học toán miễn phí cho mọi học sinh Việt Nam</span>
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.14em] text-primary">
-            <Heart className="size-3.5" />
-            Miễn phí 100%
+        <div className="container mx-auto flex flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground sm:flex-row">
+          <span>
+            © {new Date().getFullYear()} Elevation Math · Hệ thống dạy học &amp;
+            luyện thi Toán
+          </span>
+          <span className="text-muted-foreground/80">
+            Công ty TNHH Đào tạo &amp; Phát triển Giáo dục EMATH · MST 0318915841
           </span>
         </div>
       </div>
