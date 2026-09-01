@@ -1,6 +1,16 @@
 import * as React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Globe, Heart, Mail, MessageCircle, Send } from 'lucide-react';
+import {
+  ArrowRight,
+  Globe,
+  Heart,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  ReceiptText,
+  Send,
+} from 'lucide-react';
 import { LEVELS } from '@/lib/constants';
 import { LogoWordmark } from './logo-mark';
 
@@ -73,26 +83,43 @@ export function Footer() {
           </ul>
         </div>
 
-        <div className="md:col-span-3">
+        <div className="col-span-2 md:col-span-3">
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
-            Hệ thống Dạy học &amp; Luyện thi Elevation Math
+            Hệ thống Dạy học &amp; Luyện thi
           </p>
-          <div className="space-y-1.5 leading-relaxed text-muted-foreground">
-            <p className="font-medium text-foreground/80">
-              Công ty TNHH Đào tạo và Phát triển Giáo dục EMATH
+          <div className="rounded-2xl border border-border/60 bg-background/50 p-4 shadow-sm">
+            <p className="text-sm font-semibold leading-snug text-foreground">
+              Công ty TNHH Đào tạo &amp; Phát triển Giáo dục EMATH
             </p>
-            <p>MST: 0318915841</p>
-            <p>Địa chỉ: Số 35/31c Bế Văn Cấm, Tân Hưng, TP Hồ Chí Minh</p>
-            <p>
-              Hotline:{' '}
-              <a href="tel:0971321032" className="transition-colors hover:text-foreground">
-                0971321032
+            <ul className="mt-3 space-y-2.5 text-[13px] text-muted-foreground">
+              <li className="flex items-start gap-2.5">
+                <ReceiptText className="mt-0.5 size-4 shrink-0 text-primary/70" />
+                <span>
+                  Mã số thuế{' '}
+                  <span className="font-medium text-foreground/90">
+                    0318915841
+                  </span>
+                </span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <MapPin className="mt-0.5 size-4 shrink-0 text-primary/70" />
+                <span>Số 35/31c Bế Văn Cấm, Tân Hưng, TP. Hồ Chí Minh</span>
+              </li>
+            </ul>
+            <div className="mt-3.5 flex flex-wrap gap-2">
+              <a
+                href="tel:0971321032"
+                className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-[13px] font-semibold text-primary transition-colors hover:bg-primary/15"
+              >
+                <Phone className="size-3.5" /> 0971 321 032
               </a>
-              {' – '}
-              <a href="tel:0988383732" className="transition-colors hover:text-foreground">
-                0988383732
+              <a
+                href="tel:0988383732"
+                className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-[13px] font-semibold text-primary transition-colors hover:bg-primary/15"
+              >
+                <Phone className="size-3.5" /> 0988 383 732
               </a>
-            </p>
+            </div>
           </div>
         </div>
       </div>
