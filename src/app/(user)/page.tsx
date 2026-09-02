@@ -5,7 +5,6 @@ import {
   ArrowRight,
   BookMarked,
   BookOpen,
-  ChevronDown,
   Flame,
   GraduationCap,
   Heart,
@@ -299,38 +298,6 @@ export default async function HomePage() {
               tint="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
             />
           </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="reveal container mx-auto max-w-3xl px-4 py-16 md:py-20">
-        <div className="mb-10 text-center">
-          <Eyebrow className="mb-3">Câu hỏi thường gặp</Eyebrow>
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-            Giải đáp nhanh
-          </h2>
-        </div>
-        <div className="space-y-3">
-          <Faq
-            q="Elevation Math có thực sự miễn phí không?"
-            a="Có. 100% miễn phí, không có phí ẩn, không gói premium. Dự án phi lợi nhuận, sống nhờ cộng đồng và quyên góp tự nguyện."
-          />
-          <Faq
-            q="Tài liệu có chất lượng không?"
-            a="Mọi tài liệu đều được kiểm duyệt trước khi hiển thị công khai. Cộng đồng có thể đánh giá để tài liệu tốt nhất nổi lên."
-          />
-          <Faq
-            q="Tôi có cần đăng ký để xem tài liệu không?"
-            a="Không. Mọi tài liệu đều xem và tải tự do, không cần đăng ký tài khoản."
-          />
-          <Faq
-            q="Tài liệu có được cập nhật thường xuyên không?"
-            a="Có. Đội ngũ biên tập liên tục bổ sung lý thuyết, bài tập và đề thi mới, đặc biệt vào mùa thi."
-          />
-          <Faq
-            q="Elevation Math có những nhóm tài liệu nào?"
-            a="Bạn có thể chọn Lấy gốc, Phát triển, Nâng cao hoặc Luyện thi, đầy đủ từ lớp 1 đến lớp 12."
-          />
         </div>
       </section>
 
@@ -749,23 +716,3 @@ function Testimonial({
   );
 }
 
-function Faq({ q, a }: { q: string; a: string }) {
-  return (
-    <details className="group overflow-hidden rounded-2xl border border-border/70 bg-card transition-all hover:border-border open:border-primary/25 open:shadow-sm">
-      <summary className="flex cursor-pointer list-none select-none items-center justify-between gap-4 p-5 md:p-6">
-        <span className="text-base font-medium transition-colors group-open:text-primary">
-          {q}
-        </span>
-        <span
-          aria-hidden
-          className="flex size-8 shrink-0 items-center justify-center rounded-full border border-border/70 bg-background text-muted-foreground transition-all duration-300 group-open:rotate-180 group-open:border-primary group-open:bg-primary group-open:text-primary-foreground"
-        >
-          <ChevronDown className="size-4" />
-        </span>
-      </summary>
-      <div className="px-5 pb-5 text-sm leading-relaxed text-muted-foreground md:px-6 md:pb-6">
-        {a}
-      </div>
-    </details>
-  );
-}
