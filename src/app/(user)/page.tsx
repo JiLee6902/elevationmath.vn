@@ -9,7 +9,6 @@ import {
   Flame,
   GraduationCap,
   Heart,
-  Infinity as InfinityIcon,
   Sparkles,
   Users,
 } from 'lucide-react';
@@ -204,42 +203,34 @@ export default async function HomePage() {
               <span className="text-primary">Elevation Math</span>
             </h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
-              Một nơi tập trung tài liệu chất lượng do giáo viên và học sinh
-              đóng góp, miễn phí trọn đời.
+              Học đúng năng lực, đúng lộ trình — đồng hành cùng con đến mục tiêu
+              đầu ra.
             </p>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Feature
-              icon={Heart}
-              tone="rose"
-              title="Miễn phí 100%"
-              metric="0đ"
-              metricLabel="phí ẩn"
-              description="Không quảng cáo phiền toái, không gói premium. Dành cho mọi học sinh."
-            />
-            <Feature
               icon={BookMarked}
               tone="emerald"
-              title="Học đúng mục tiêu"
-              metric="4 nhóm"
-              metricLabel="học tập"
-              description="Lấy gốc, phát triển, nâng cao và luyện thi — chọn đúng nhu cầu của bạn."
+              title="Tài liệu Toán chuẩn, bám sát"
+              description="Chuẩn chương trình phổ thông các cấp từ lớp 1–12; tài liệu luyện thi chuẩn, định hướng đầu ra."
             />
             <Feature
               icon={Users}
               tone="violet"
-              title="Cộng đồng học tập"
-              metric="50K+"
-              metricLabel="lượt học / tháng"
-              description="Hàng nghìn học sinh và giáo viên dùng Elevation Math mỗi ngày."
+              title="Phân lớp năng lực đầu vào"
+              description="Lấy gốc; dạy trọng tâm & nâng cao đúng lộ trình cá nhân hoá cho từng học sinh."
             />
             <Feature
-              icon={InfinityIcon}
+              icon={Heart}
+              tone="rose"
+              title="Nói không với BTVN & áp lực thi cử"
+              description="Elevation Math đồng hành hiệu quả suốt quá trình học & luyện thi — không áp đặt bài tập về nhà."
+            />
+            <Feature
+              icon={GraduationCap}
               tone="amber"
-              title="Không giới hạn"
-              metric="∞"
-              metricLabel="lượt tải"
-              description="Học mọi lúc mọi nơi — không cần đăng ký, không phải đợi."
+              title="Định hướng mục tiêu đầu ra 8, 9, 10"
+              description="Mọi tiến bộ được đo bằng điểm số và nhiều chỉ số về kỹ năng làm toán & thái độ học tập."
             />
           </div>
         </div>
@@ -253,24 +244,24 @@ export default async function HomePage() {
             Bắt đầu chỉ trong 3 bước
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Đơn giản như mở quyển sách giáo khoa.
+            Với Elevation Math — mọi học sinh đều có thể giỏi Toán.
           </p>
         </div>
         <div className="relative grid grid-cols-1 gap-6 md:grid-cols-3">
           <Step
             n="01"
             title="Chọn lớp & mục tiêu"
-            description="Tìm theo cấp học, lớp hoặc nhóm chương trình. Không cần đăng ký."
+            description="Tìm theo lớp, cấp học hoặc nhóm chương trình; đăng ký và gửi thông tin của con."
           />
           <Step
             n="02"
-            title="Đọc tài liệu"
-            description="Xem trực tiếp PDF trong trình duyệt hoặc tải về máy."
+            title="Nhận tư vấn & học thử"
+            description="Học sinh được phỏng vấn đầu vào bởi cố vấn học tập; phòng tư vấn sắp xếp lịch học thử trong 1–5 ngày làm việc."
           />
           <Step
             n="03"
-            title="Học & chia sẻ"
-            description="Học theo chương, đánh giá, và đóng góp tài liệu của riêng bạn."
+            title="Học tập & rèn luyện"
+            description="Vào lộ trình cá nhân hoá; tiến bộ được đo lường và theo sát qua từng buổi học."
             isLast
           />
         </div>
@@ -636,8 +627,8 @@ function Feature({
   icon: typeof Heart;
   tone: FeatureTone;
   title: string;
-  metric: string;
-  metricLabel: string;
+  metric?: string;
+  metricLabel?: string;
   description: string;
 }) {
   const t = FEATURE_TONE[tone];
@@ -655,17 +646,23 @@ function Feature({
       <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
         {description}
       </p>
-      <div className="mt-5 border-t border-border/60 pt-5">
-        <div
-          className={cn(
-            'text-3xl font-semibold leading-none tracking-tight',
-            t.metric,
+      {metric && (
+        <div className="mt-5 border-t border-border/60 pt-5">
+          <div
+            className={cn(
+              'text-3xl font-semibold leading-none tracking-tight',
+              t.metric,
+            )}
+          >
+            {metric}
+          </div>
+          {metricLabel && (
+            <div className="mt-2 text-xs text-muted-foreground">
+              {metricLabel}
+            </div>
           )}
-        >
-          {metric}
         </div>
-        <div className="mt-2 text-xs text-muted-foreground">{metricLabel}</div>
-      </div>
+      )}
     </div>
   );
 }
