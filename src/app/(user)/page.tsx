@@ -195,13 +195,13 @@ export default async function HomePage() {
       <CoursesSection />
 
       {/* Vì sao Elevation Math */}
-      <section className="reveal mt-16 border-y bg-muted/40">
+      <section className="reveal border-y bg-muted/40">
         <div className="container mx-auto px-4 py-16 md:py-20">
           <div className="mx-auto max-w-2xl text-center">
             <Eyebrow className="mb-3">Vì sao Elevation Math</Eyebrow>
             <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-              Học toán thông minh hơn,{' '}
-              <span className="text-muted-foreground">không tốn xu nào.</span>
+              Học toán giỏi cùng{' '}
+              <span className="text-primary">Elevation Math</span>
             </h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
               Một nơi tập trung tài liệu chất lượng do giáo viên và học sinh
